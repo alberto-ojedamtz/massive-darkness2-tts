@@ -1,5 +1,6 @@
 HERO_CLASSES = { }
 HERO_BAGS = {}
+CLASS_COMPONENTS = {}
 PLAYER_MENUS = {}
 
 PLAYER_1_GUID = "d78c56"
@@ -18,6 +19,7 @@ CLASS_DEFAULT_TEXT = "Pick a class"
 function createCharacterSelectMenu ()
     initializeHeroClasses()
     initializePlayerMenus()
+    initializeClassComponents()
     hidePlayerMenuCheckers()
 
     for _, pm in pairs(PLAYER_MENUS) do
@@ -32,6 +34,15 @@ function initializeHeroClasses()
     for _, bag in pairs(heroBags) do
         HERO_BAGS[bag.getName()] = bag
         table.insert(HERO_CLASSES, bag.getName())
+    end
+end
+
+function initializeClassComponents()
+    local zone = getObjectFromGUID("26ce87")
+    local componentBags = zone.getObjects()
+
+    for _, bag in pairs(componentBags) do
+        CLASS_COMPONENTS[bag.getName()] = bag
     end
 end
 

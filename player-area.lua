@@ -9,7 +9,7 @@ LEVEL_BOARD_RELATIVE_POSITIONS = {
     z = -1.6
 }
 
-CHARACTER_CARD_RELATIVE_POSITIONS = {
+CHARACTER_CARD_RELATIVE_POSITION = {
     x = -1.24, 
     y = 0.12, 
     z = 1.82
@@ -21,6 +21,7 @@ function setUpPlayerAreas()
             placePlayerBoard(playerMenu)
             Wait.frames(function() placeLevelBoard(playerMenu) end, 5)
             Wait.frames(function() placeCharacterOnPlayerBoard(playerMenu) end, 5)
+            Wait.frames(function() placeCharacterComponents(playerMenu) end, 5)
         end
     end
 end
@@ -58,16 +59,27 @@ end
 
 function placeCharacterOnPlayerBoard(playerMenu)
     local position = PLAYER_BOARDS_POSITIONS[playerMenu.number]
-    position.x = position.x + CHARACTER_CARD_RELATIVE_POSITIONS.x
-    position.y = position.y + CHARACTER_CARD_RELATIVE_POSITIONS.y
-    position.z = position.z + CHARACTER_CARD_RELATIVE_POSITIONS.z
-    playerMenu.selectedCharacterCard.setPosition(position)
+    local xPos = position.x + CHARACTER_CARD_RELATIVE_POSITION.x
+    local yPos = position.y + CHARACTER_CARD_RELATIVE_POSITION.y
+    local zPos = position.z + CHARACTER_CARD_RELATIVE_POSITION.z
+    playerMenu.selectedCharacterCard.setPosition({ x = xPos, y = yPos, z = zPos })
     playerMenu.selectedCharacterCard.interactable = true
     playerMenu.selectedCharacterCard.setLock(true)
 
-    position.x = position.x + CHARACTER_CARD_RELATIVE_POSITIONS.x - 3
-    position.y = position.y + CHARACTER_CARD_RELATIVE_POSITIONS.y
-    position.z = position.z + CHARACTER_CARD_RELATIVE_POSITIONS.z + 2
-    playerMenu.selectedCharacterFigurine.setPosition(position)
+    xPos = position.x + CHARACTER_CARD_RELATIVE_POSITION.x - 3
+    yPos = position.y + CHARACTER_CARD_RELATIVE_POSITION.y
+    zPos = position.z + CHARACTER_CARD_RELATIVE_POSITION.z + 4
+    playerMenu.selectedCharacterFigurine.setPosition({ x = xPos, y = yPos, z = zPos })
     playerMenu.selectedCharacterFigurine.interactable = true
+end
+
+function placeCharacterComponents(playerMenu)
+    local componentsBag = CLASS_COMPONENTS[playerMenu.selectedClassText]
+    log(playerMenu.selectedClassText)
+    local position = PLAYER_BOARDS_POSITIONS[playerMenu.number]
+    local xPos = position.x + CHARACTER_CARD_RELATIVE_POSITION.x
+    local yPos = position.y + CHARACTER_CARD_RELATIVE_POSITION.y
+    local zPos = position.z + CHARACTER_CARD_RELATIVE_POSITION.z + 4
+
+    componentsBag.setPosition({ x = xPos, y = yPos, z = zPos })
 end
