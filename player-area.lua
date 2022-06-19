@@ -75,7 +75,6 @@ end
 
 function placeCharacterComponents(playerMenu)
     local componentsBag = CLASS_COMPONENTS[playerMenu.selectedClassText]
-    log(playerMenu.selectedClassText)
     local position = PLAYER_BOARDS_POSITIONS[playerMenu.number]
     local xPos = position.x + CHARACTER_CARD_RELATIVE_POSITION.x
     local yPos = position.y + CHARACTER_CARD_RELATIVE_POSITION.y
