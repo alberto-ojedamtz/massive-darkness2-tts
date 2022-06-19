@@ -51,6 +51,8 @@ function createPlayerMenuProperties(guid, number, cardZoneGuid)
         selectedClassId = 0,
         selectedCharacterText = "",
         selectedCharacterId = 0,
+        selectedCharacterCard = nil,
+        selectedCharacterFigurine = nil,
         cardZoneGuid = cardZoneGuid
     }
 end
@@ -161,7 +163,7 @@ function destroyCharacterMenu(playerMenu)
         return
     end
 
-    removeCharacterFromPlayerMenu(playerMenu)
+    removeObjectsFromCharacterZone(playerMenu)
     for i = CHARACTER_MENU_START_INDEX, #playerMenu.obj.getButtons() - 1, 1 do
         playerMenu.obj.removeButton(i)
     end
@@ -215,7 +217,6 @@ function cycleNextCharacter(obj)
 end
 
 function cycleCharacter(playerMenu, characterId, isDefaultAtBeginning)
-    -- id 1 has no character associated with it 
     if (playerMenu.selectedClassId == 0) then 
         destroyCharacterMenu(playerMenu)
         return
@@ -237,11 +238,11 @@ function cycleCharacter(playerMenu, characterId, isDefaultAtBeginning)
     playerMenu.selectedCharacterText = characterBag.name
     playerMenu.obj.editButton({ index = SELECTED_CHARACTER_BUTTON_INDEX, label = characterBag.name })
 
-    placeCharacter(bag, playerMenu, zPos)
+    placeObjectsOnCharacterZone(bag, playerMenu, zPos)
 end
 
-function placeCharacter(bag, playerMenu, zPos)
-    removeCharacterFromPlayerMenu(playerMenu)
+function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
+    removeObjectsFromCharacterZone(playerMenu)
 
     local helperBag = bag.clone({ position = { x = 0, y = 1, z = 0 }})
     helperBag.interactable = false
@@ -269,18 +270,29 @@ function placeCharacter(bag, playerMenu, zPos)
     })
     figurine.interactable = false
 
+    playerMenu.selectedCharacterCard = characterCard
+    playerMenu.selectedCharacterFigurine = figurine
 
     helperBag.destruct()
     characterBag.destruct()
 end
 
-function removeCharacterFromPlayerMenu(playerMenu)
-    local cardsInZone = getObjectFromGUID(playerMenu.cardZoneGuid).getObjects()
-    for _, c in pairs(cardsInZone) do
+function removeObjectsFromCharacterZone(playerMenu)
+    local objects = getObjectsFromCharacterZone(playerMenu)
+    for _, obj in pairs(objects) do 
+        obj.destruct()
+    end
+end
+
+function getObjectsFromCharacterZone(playerMenu)
+    local objectsInZone = getObjectFromGUID(playerMenu.cardZoneGuid).getObjects()
+    local objects = {}
+    for _, c in pairs(objectsInZone) do
         if (c.getGUID() ~= "c86088") then 
-            c.destruct()
+            table.insert(objects, c)
         end
     end
+    return objects;
 end
 
 function findCharacterBag(bag, characterId) 

@@ -19,5 +19,6 @@ function setUp()
 end
 
 function startGame()
+    log("START")
     setUpPlayerAreas()   
 end

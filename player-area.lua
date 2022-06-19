@@ -19,7 +19,8 @@ function setUpPlayerAreas()
     for _, playerMenu in pairs(PLAYER_MENUS) do
         if (playerMenu.selectedClassId > 0 and playerMenu.selectedCharacterId > 0) then
             placePlayerBoard(playerMenu)
-            placeLevelBoard(playerMenu)
+            Wait.frames(function() placeLevelBoard(playerMenu) end, 5)
+            Wait.frames(function() placeCharacterOnPlayerBoard(playerMenu) end, 5)
         end
     end
 end
@@ -49,11 +50,24 @@ function placeLevelBoard(playerMenu)
         position = { x = xPos, y = yPos, z = zPos }
     })
 
-    levelBoard.setCustomObject({ 
-        image = LEVEL_BOARD_URL, 
-        thickness = 0.1 
-    })
+    levelBoard.setCustomObject({ image = LEVEL_BOARD_URL, thickness = 0.1 })
     levelBoard.setScale({ x = 0.74, y = 1, z = 0.75 })
     levelBoard.setRotation({ x = 0, y = 180, z = 0 })
     levelBoard.setLock(true)
+end
+
+function placeCharacterOnPlayerBoard(playerMenu)
+    local position = PLAYER_BOARDS_POSITIONS[playerMenu.number]
+    position.x = position.x + CHARACTER_CARD_RELATIVE_POSITIONS.x
+    position.y = position.y + CHARACTER_CARD_RELATIVE_POSITIONS.y
+    position.z = position.z + CHARACTER_CARD_RELATIVE_POSITIONS.z
+    playerMenu.selectedCharacterCard.setPosition(position)
+    playerMenu.selectedCharacterCard.interactable = true
+    playerMenu.selectedCharacterCard.setLock(true)
+
+    position.x = position.x + CHARACTER_CARD_RELATIVE_POSITIONS.x - 3
+    position.y = position.y + CHARACTER_CARD_RELATIVE_POSITIONS.y
+    position.z = position.z + CHARACTER_CARD_RELATIVE_POSITIONS.z + 2
+    playerMenu.selectedCharacterFigurine.setPosition(position)
+    playerMenu.selectedCharacterFigurine.interactable = true
 end
