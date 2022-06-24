@@ -18,7 +18,9 @@ function setUp()
     })
 end
 
-function startGame()
-    log("START")
+function startGame(obj)
     setUpPlayerAreas()   
+    destroyPlayerMenuButtons()
+
+    obj.destruct()
 end

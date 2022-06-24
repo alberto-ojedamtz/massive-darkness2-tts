@@ -1,13 +1,17 @@
+PLAYER_MENU_GUIDS = { 
+    { checkerGuid = "d78c56", zoneGuid = "06a5de" },
+    { checkerGuid = "c6d1b9", zoneGuid = "1cf3e3" },
+    { checkerGuid = "4b1371", zoneGuid = "df9bba" },
+    { checkerGuid = "65b0de", zoneGuid = "1c5601" },
+    { checkerGuid = "2c0bbc", zoneGuid = "29b6cd" },
+}
+
 HERO_CLASSES = { }
 HERO_BAGS = {}
 CLASS_COMPONENTS = {}
 PLAYER_MENUS = {}
 
-PLAYER_1_GUID = "d78c56"
-PLAYER_2_GUID = "c6d1b9"
-PLAYER_3_GUID = "4b1371"
-PLAYER_4_GUID = "65b0de"
-PLAYER_5_GUID = "2c0bbc"
+-- A checker is used to create the buttons for each player
 SELECTED_CLASS_BUTTON_INDEX = 2
 SELECTED_CHARACTER_BUTTON_INDEX = 5
 
@@ -47,11 +51,11 @@ function initializeClassComponents()
 end
 
 function initializePlayerMenus() 
-    PLAYER_MENUS[PLAYER_1_GUID] = createPlayerMenuProperties(PLAYER_1_GUID, 1, "06a5de")
-    PLAYER_MENUS[PLAYER_2_GUID] = createPlayerMenuProperties(PLAYER_2_GUID, 2, "1cf3e3")
-    PLAYER_MENUS[PLAYER_3_GUID] = createPlayerMenuProperties(PLAYER_3_GUID, 3, "df9bba")
-    PLAYER_MENUS[PLAYER_4_GUID] = createPlayerMenuProperties(PLAYER_4_GUID, 4, "1c5601")
-    PLAYER_MENUS[PLAYER_5_GUID] = createPlayerMenuProperties(PLAYER_5_GUID, 5, "29b6cd")
+    for i = 1, #PLAYER_MENU_GUIDS, 1 do
+        local checkerGuid = PLAYER_MENU_GUIDS[i].checkerGuid
+        local zoneGuid = PLAYER_MENU_GUIDS[i].zoneGuid
+        PLAYER_MENUS[checkerGuid] = createPlayerMenuProperties(checkerGuid, i, zoneGuid)
+    end
 end
 
 function createPlayerMenuProperties(guid, number, cardZoneGuid)
@@ -316,4 +320,10 @@ end
 
 function characterMenuExists(playerMenu)
     return #playerMenu.obj.getButtons() > CHARACTER_MENU_START_INDEX
+end
+
+function destroyPlayerMenuButtons()
+    for _, v in pairs(PLAYER_MENUS) do
+        v.obj.destruct()
+    end
 end
