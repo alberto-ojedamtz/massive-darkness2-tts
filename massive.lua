@@ -1,6 +1,7 @@
 require("character-select")
 require("custom-objects")
 require("player-area")
+require("map-tiles")
 
 function setUp() 
     createCharacterSelectMenu()
@@ -21,6 +22,7 @@ end
 function startGame(obj)
     setUpPlayerAreas()   
     destroyPlayerMenuButtons()
+    placeQuestTiles()
 
     obj.destruct()
 end

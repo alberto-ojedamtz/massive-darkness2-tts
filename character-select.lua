@@ -21,9 +21,9 @@ CLASS_DEFAULT_TEXT = "Pick a class"
 
 
 function createCharacterSelectMenu ()
-    initializeHeroClasses()
+    initializeCharacterBags()
     initializePlayerMenus()
-    initializeClassComponents()
+    initializeClassComponentsBags()
     hidePlayerMenuCheckers()
 
     for _, pm in pairs(PLAYER_MENUS) do
@@ -31,7 +31,7 @@ function createCharacterSelectMenu ()
     end
 end
 
-function initializeHeroClasses()
+function initializeCharacterBags()
     local zone = getObjectFromGUID(CHARACTER_ZONE_GUID)
     local heroBags = zone.getObjects()
 
@@ -41,7 +41,7 @@ function initializeHeroClasses()
     end
 end
 
-function initializeClassComponents()
+function initializeClassComponentsBags()
     local zone = getObjectFromGUID("26ce87")
     local componentBags = zone.getObjects()
 
@@ -68,7 +68,9 @@ function createPlayerMenuProperties(guid, number, cardZoneGuid)
         selectedCharacterId = 0,
         selectedCharacterCard = nil,
         selectedCharacterFigurine = nil,
-        cardZoneGuid = cardZoneGuid
+        cardZoneGuid = cardZoneGuid,
+        selectedConsumable = nil,
+        selectedWeapon = nil
     }
 end
 

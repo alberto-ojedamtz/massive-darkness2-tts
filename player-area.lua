@@ -36,7 +36,7 @@ function placeObjectRelativeToPlayerBoard(playerMenu, object, relativeValues, lo
         zPos = zPos - (relativeValues.z * 2)
     end
 
-    object.setPosition({ x = xPos, y = yPos, z = zPos })
+    object.setPositionSmooth({ x = xPos, y = yPos, z = zPos })
     object.interactable = true
     object.setLock(lock)
 end
