@@ -29,21 +29,28 @@ SCENARIO_TILE_POSITION = {
     rotations = 0
 }
 
-function createTilePlacement(guid, x, z)
+--[[
+    guid: Map tile guid
+    x: Index from MAP_GRID_X for position.x
+    z: Index from MAP_GRID_Z for position.z
+    rotations: Number of times tile should be rotated to the right by 90°
+]]
+function createTilePlacement(guid, x, z, yRotation)
     local posX = MAP_GRID_X[x]
     local posZ = MAP_GRID_Z[z]
     local result = {
         guid = guid,
         position = { x = posX, y = 3, z = posZ },
+        rotation = { x = 0, y = yRotation, z = 0 }
     }
 
     return result
 end
 
 CORE_QUEST_2 = {
-    createTilePlacement(CORE_MAP_1A, 2, 2),
-    createTilePlacement(CORE_MAP_3A, 2, 3),
-    createTilePlacement(CORE_MAP_5A, 2, 4)
+    createTilePlacement(CORE_MAP_1A, 2, 2, 270),
+    createTilePlacement(CORE_MAP_3A, 2, 3, 0),
+    createTilePlacement(CORE_MAP_5A, 2, 4, 0)
 }
 
 function placeQuestTiles()
@@ -58,6 +65,7 @@ function placeQuestTiles()
     bag.takeObject({
         guid = tilePlacement.guid,
         position = tilePlacement.position,
+        rotation = tilePlacement.rotation,
         callback_function = placeQuestTiles
     })
 end
