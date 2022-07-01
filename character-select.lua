@@ -305,9 +305,7 @@ function getObjectsFromCharacterZone(playerMenu)
     local objectsInZone = getObjectFromGUID(playerMenu.cardZoneGuid).getObjects()
     local objects = {}
     for _, c in pairs(objectsInZone) do
-        if (c.getGUID() ~= "c86088") then 
-            table.insert(objects, c)
-        end
+        table.insert(objects, c)
     end
     return objects;
 end
@@ -326,6 +324,10 @@ end
 
 function destroyPlayerMenuButtons()
     for _, v in pairs(PLAYER_MENUS) do
+        -- for _,b in pairs(v.obj.getButtons()) do
+            -- log(b.label)
+        -- end
+        -- log('--------------------------')
         v.obj.destruct()
     end
 end

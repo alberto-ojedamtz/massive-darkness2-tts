@@ -22,13 +22,6 @@ MAP_GRID_Z = { 29, 13.3, -2.4, -18.1 }
 
 MAP_TILE_OFFSET = 15.7
 
-SCENARIO_TILE_POSITION = {
-    tileGuid = CORE_MAP_1A,
-    gridX = 2,
-    gridY = 2,
-    rotations = 0
-}
-
 --[[
     guid: Map tile guid
     x: Index from MAP_GRID_X for position.x
@@ -41,31 +34,32 @@ function createTilePlacement(guid, x, z, yRotation)
     local result = {
         guid = guid,
         position = { x = posX, y = 3, z = posZ },
-        rotation = { x = 0, y = yRotation, z = 0 }
+        rotation = { x = 0, y = yRotation or 0, z = 0 }
     }
 
     return result
 end
 
-CORE_QUEST_2 = {
-    createTilePlacement(CORE_MAP_1A, 2, 2, 270),
-    createTilePlacement(CORE_MAP_3A, 2, 3, 0),
-    createTilePlacement(CORE_MAP_5A, 2, 4, 0)
+CORE_QUEST_1 = {
+    name = "Tutorial",
+    page = 36,
+    tilesPlacement = { 
+        createTilePlacement(CORE_MAP_1A, 3, 2),
+        createTilePlacement(CORE_MAP_4A, 4, 2)
+    },
 }
 
-function placeQuestTiles()
-    local bag = getObjectFromGUID(MAP_TILES_BAG)
+CORE_QUEST_2 = {
+    name = "Highway to Hellscape",
+    page = 37,
+    tilesPlacement = {
+        createTilePlacement(CORE_MAP_1A, 2, 2, 270),
+        createTilePlacement(CORE_MAP_3A, 2, 3),
+        createTilePlacement(CORE_MAP_5A, 2, 4)
+    },
+}
 
-    local tilePlacement = table.remove(CORE_QUEST_2)
-    
-    if not tilePlacement then
-        return
-    end
-
-    bag.takeObject({
-        guid = tilePlacement.guid,
-        position = tilePlacement.position,
-        rotation = tilePlacement.rotation,
-        callback_function = placeQuestTiles
-    })
-end
+QUEST_CATALOG = {
+    CORE_QUEST_1,
+    CORE_QUEST_2,
+}
