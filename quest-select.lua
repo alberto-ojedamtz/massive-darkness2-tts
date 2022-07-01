@@ -14,7 +14,7 @@ function questSelection(obj)
     setUpPlayerAreas()
     destroyPlayerMenuButtons()
 
-    checkerQuestSelect.editButton({ index = 0, label = "Start", click_function = "placeQuestTile" })
+    checkerQuestSelect.editButton({ index = 0, label = "Start", click_function = "setUpQuest" })
 
     Wait.frames(
         function() placeRulebook() end
@@ -95,9 +95,13 @@ function updateSelectedQuest()
     RULEBOOK.Book.setPage(QUEST_CATALOG[SELECTED_QUEST_INDEX].page)
 end
 
-function placeQuestTile()
+function setUpQuest()
+    destroyAllHiddenObjects()
+    placeMapTiles()
+end
+
+function placeMapTiles() 
     if (TAKEN_MAP_TILE_INDEX > #QUEST_CATALOG[SELECTED_QUEST_INDEX].tilesPlacement) then
-        destroyAllHiddenObjects()
         return
     end
 
@@ -109,6 +113,6 @@ function placeQuestTile()
         guid = tile.guid,
         position = tile.position,
         rotation = tile.rotation,
-        callback_function = placeQuestTile
+        callback_function = placeMapTiles
     })
 end

@@ -1,5 +1,4 @@
 require("character-select")
-require("custom-objects")
 require("player-area")
 require("map-tiles")
 require("quest-select")

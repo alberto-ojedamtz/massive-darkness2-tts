@@ -33,7 +33,7 @@ function createTilePlacement(guid, x, z, yRotation)
     local posZ = MAP_GRID_Z[z]
     local result = {
         guid = guid,
-        position = { x = posX, y = 3, z = posZ },
+        position = { x = posX, y = 2, z = posZ },
         rotation = { x = 0, y = yRotation or 0, z = 0 }
     }
 
@@ -44,8 +44,8 @@ CORE_QUEST_1 = {
     name = "Tutorial",
     page = 36,
     tilesPlacement = { 
-        createTilePlacement(CORE_MAP_1A, 3, 2),
-        createTilePlacement(CORE_MAP_4A, 4, 2)
+        createTilePlacement(CORE_MAP_1A, 2, 4),
+        createTilePlacement(CORE_MAP_4A, 3, 4)
     },
 }
 
