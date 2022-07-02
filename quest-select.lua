@@ -10,11 +10,14 @@ RULEBOOK = nil
 SELECTED_QUEST_INDEX = 1
 TAKEN_MAP_TILE_INDEX = 1
 
-function questSelection(obj)
+function questSelection()
     setUpPlayerAreas()
     destroyPlayerMenuButtons()
 
-    checkerQuestSelect.editButton({ index = 0, label = "Start", click_function = "setUpQuest" })
+    mainButtonObject.editButton({ 
+        index = 0, label = "Start", 
+        click_function = "setUpQuest" 
+    })
 
     Wait.frames(
         function() placeRulebook() end

@@ -67,7 +67,6 @@ function createPlayerMenuProperties(guid, number, cardZoneGuid)
         selectedCharacterText = "",
         selectedCharacterId = 0,
         selectedCharacterCard = nil,
-        selectedCharacterFigurine = nil,
         cardZoneGuid = cardZoneGuid,
         selectedConsumable = nil,
         selectedWeapon = nil
@@ -150,16 +149,6 @@ function createCharacterMenu(playerMenu)
         height = 500
     }
 
-    local selectedCharacterText = {
-        click_function = "nil",
-        label = "",
-        position = { x = 16, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "White",
-        width = 0,
-        height = 0
-    }
-
     local nextCharacterButton = {
         click_function = "cycleNextCharacter",
         label = ">",
@@ -171,7 +160,6 @@ function createCharacterMenu(playerMenu)
     }
 
     playerMenu.obj.createButton(previousCharacterButton)
-    playerMenu.obj.createButton(selectedCharacterText)
     playerMenu.obj.createButton(nextCharacterButton)
 end
 
@@ -253,7 +241,6 @@ function cycleCharacter(playerMenu, characterId, isDefaultAtBeginning)
 
     playerMenu.selectedCharacterId = characterId
     playerMenu.selectedCharacterText = characterBag.name
-    playerMenu.obj.editButton({ index = SELECTED_CHARACTER_BUTTON_INDEX, label = characterBag.name })
 
     placeObjectsOnCharacterZone(bag, playerMenu, zPos)
 end
@@ -273,7 +260,7 @@ function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
     })
 
     local characterCard = characterBag.takeObject({
-        position = { x = 23, y = 0.9, z = zPos },
+        position = { x = 16, y = 0.9, z = zPos },
         smooth = false
     })
 
@@ -281,14 +268,7 @@ function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
     characterCard.setRotation({ x = 0, y = yRotation, z = 0 })
     characterCard.interactable = false
 
-    local figurine = characterBag.takeObject({
-        position = { x = 27, y = 0.9, z = zPos },
-        smooth = false
-    })
-    figurine.interactable = false
-
     playerMenu.selectedCharacterCard = characterCard
-    playerMenu.selectedCharacterFigurine = figurine
 
     helperBag.destruct()
     characterBag.destruct()
@@ -324,10 +304,6 @@ end
 
 function destroyPlayerMenuButtons()
     for _, v in pairs(PLAYER_MENUS) do
-        -- for _,b in pairs(v.obj.getButtons()) do
-            -- log(b.label)
-        -- end
-        -- log('--------------------------')
         v.obj.destruct()
     end
 end
