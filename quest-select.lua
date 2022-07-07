@@ -35,20 +35,17 @@ function placeRulebook()
 end
 
 function createQuestSelectionMenu() 
-    QUEST_MENU_OBJECTS.leftArrow = spawnHiddenObject(0, 0)
-    QUEST_MENU_OBJECTS.questName = spawnHiddenObject(7, 0)
-    QUEST_MENU_OBJECTS.rightArrow = spawnHiddenObject(14, 0)
-
-    QUEST_MENU_OBJECTS.leftArrow.createButton({
+    local leftArrowButtonParams = {
         click_function = "previousQuest",
         label = "<",
         font_size = 500,
         position = { x = 0, y = 2, z = 0 },
         width = 500,
         height = 500
-    })
+    }
+    QUEST_MENU_OBJECTS.leftArrow = spawnHiddenObjectWithButtons(0, 0, leftArrowButtonParams)
 
-    QUEST_MENU_OBJECTS.questName.createButton({
+    local questNameButtonParams = {
         click_function = "asd",
         label = QUEST_CATALOG[SELECTED_QUEST_INDEX].name, 
         font_color = "White",
@@ -56,16 +53,18 @@ function createQuestSelectionMenu()
         position = { x = 0, y = 2, z = 0 },
         width = 0,
         height = 0
-    })
+    }
+    QUEST_MENU_OBJECTS.questName = spawnHiddenObjectWithButtons(7, 0, questNameButtonParams)
 
-    QUEST_MENU_OBJECTS.rightArrow.createButton({
+    local rightArrowButtonParams = {
         click_function = "nextQuest",
         label = ">",
         font_size = 500,
         position = { x = 0, y = 2, z = 0 },
         width = 500,
         height = 500
-    })
+    }
+    QUEST_MENU_OBJECTS.rightArrow = spawnHiddenObjectWithButtons(14, 0, rightArrowButtonParams)
 
     updateSelectedQuest()
 end
