@@ -21,8 +21,8 @@ function spawnHiddenObjectWithButtons(xPos, zPos, ...)
 end
 
 function destroyAllHiddenObjects()
-    for _, obj in pairs(HIDDEN_OBJECTS) do
-        obj.destruct()
+    while #HIDDEN_OBJECTS > 0 do
+        table.remove(HIDDEN_OBJECTS, 1).destruct()
     end
 end
 
