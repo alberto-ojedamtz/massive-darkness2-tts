@@ -30,3 +30,24 @@ function makeObjectUninteractable(obj)
     obj.setLock(true)
     obj.interactable = false
 end
+
+function spawn3DText(position, text)
+    local object = spawnObject({
+        position = position,
+        rotation = { x = 90, y = 0, z = 0 },
+        type = "3DText"
+    })
+
+    object.TextTool.setValue(text)
+
+    table.insert(TEXT_OBJECTS, object)
+
+    return object
+end
+
+function destroyMenu()
+    destroyAllHiddenObjects()
+    for _, v in pairs(TEXT_OBJECTS) do
+        v.destruct()
+    end
+end

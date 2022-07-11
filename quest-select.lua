@@ -12,7 +12,7 @@ TAKEN_MAP_TILE_INDEX = 1
 
 function questSelection()
     setUpPlayerAreas()
-    destroyPlayerMenuButtons()
+    destroyMenu()
 
     mainButtonObject.editButton({ 
         index = 0, label = "Start", 

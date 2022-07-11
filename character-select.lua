@@ -5,7 +5,10 @@ PLAYERS_PROPERTIES = {}
 TEXT_OBJECTS = {}
 
 CHARACTER_ZONE_GUID = "d88dbe"
-CHARACTER_MENU_START_INDEX = 4
+MENU_PREV_CLASS_BTN_IDX = 1
+MENU_NEXT_CLASS_BTN_IDX = 2
+MENU_PREV_CHAR_BTN_IDX = 3
+MENU_NEXT_CHAR_BTN_IDX = 4
 
 MENU_Z_SPACING = 5
 MENU_STARTING_Z_VALUE = 0
@@ -71,20 +74,6 @@ function spawnPlayerNumberText(playerNumber, zPos)
     return spawn3DText(position, text)
 end
 
-function spawn3DText(position, text)
-    local object = spawnObject({
-        position = position,
-        rotation = { x = 90, y = 0, z = 0 },
-        type = "3DText"
-    })
-
-    object.TextTool.setValue(text)
-
-    table.insert(TEXT_OBJECTS, object)
-
-    return object
-end
-
 function createPlayerMenuProperties(playerNumber, selectedClassTextObj, btnsObj)
     return {
         number = playerNumber,
@@ -129,21 +118,21 @@ function createCharacterMenu(playerProperties)
     local previousCharacterButton = {
         click_function = "cyclePreviousCharacter",
         label = "<",
-        position = { x = 13, y = 1, z = 0 },
+        position = { x = 11, y = 2, z = 0 },
         font_size = fontSize,
         font_color = "Black",
         width = 500,
-        height = 500
+        height = 1200
     }
 
     local nextCharacterButton = {
         click_function = "cycleNextCharacter",
         label = ">",
-        position = { x = 19, y = 1, z = 0 },
+        position = { x = 17, y = 2, z = 0 },
         font_size = fontSize,
         font_color = "Black",
         width = 500,
-        height = 500
+        height = 1200
     }
 
     playerProperties.buttonsObj.createButton(previousCharacterButton)
@@ -156,7 +145,7 @@ function destroyCharacterMenu(playerProperties)
     end
 
     destroySelectedCharacterObjects(playerProperties)
-    for i = CHARACTER_MENU_START_INDEX, #playerProperties.buttonsObj.getButtons() - 1, 1 do
+    for i = MENU_PREV_CHAR_BTN_IDX, #playerProperties.buttonsObj.getButtons() - 1, 1 do
         playerProperties.buttonsObj.removeButton(i)
     end
 end
@@ -255,7 +244,7 @@ function placeObjectsOnCharacterZone(bag, playerProperties, zPos)
     })
 
     local characterCard = characterBag.takeObject({
-        position = { x = 16, y = 0.9, z = zPos },
+        position = { x = 17.5, y = 0.9, z = zPos },
         smooth = false
     })
 
@@ -264,7 +253,7 @@ function placeObjectsOnCharacterZone(bag, playerProperties, zPos)
     characterCard.interactable = false
 
     local characterFigurine = characterBag.takeObject({
-        position = { x = 20, y = 0.9, z = zPos },
+        position = { x = 17.5, y = 0.9, z = zPos },
         smooth = false
     })
     characterFigurine.interactable = false
@@ -292,12 +281,5 @@ function findCharacterBag(bag, characterId)
 end
 
 function characterMenuExists(playerProperties)
-    return #playerProperties.buttonsObj.getButtons() > CHARACTER_MENU_START_INDEX
-end
-
-function destroyPlayerMenuButtons()
-    destroyAllHiddenObjects()
-    for _, v in pairs(TEXT_OBJECTS) do
-        v.destruct()
-    end
+    return #playerProperties.buttonsObj.getButtons() > MENU_PREV_CHAR_BTN_IDX
 end
