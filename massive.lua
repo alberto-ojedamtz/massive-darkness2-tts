@@ -4,15 +4,15 @@ require("map-tiles")
 require("quest-select")
 require("utils")
 
-checkerQuestSelect = nil
+mainButtonObject = nil
 
 function setUp() 
     createCharacterSelectMenu()
 
-    checkerQuestSelect = getObjectFromGUID("8eb6d6")
-    checkerQuestSelect.setLock(true)
-    checkerQuestSelect.setPosition({ x = 8, y = 0, z = 3})
-    checkerQuestSelect.createButton({
+    mainButtonObject = getObjectFromGUID("8eb6d6")
+    mainButtonObject.setLock(true)
+    mainButtonObject.setPosition({ x = 8, y = 0, z = 3})
+    mainButtonObject.createButton({
         click_function = "questSelection",
         position = { x = 0, y = 1, z = 0 },
         label = "Confirm",

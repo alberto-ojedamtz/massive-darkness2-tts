@@ -1,34 +1,92 @@
-PLAYER_MENU_GUIDS = { 
-    { checkerGuid = "d78c56", zoneGuid = "06a5de" },
-    { checkerGuid = "c6d1b9", zoneGuid = "1cf3e3" },
-    { checkerGuid = "4b1371", zoneGuid = "df9bba" },
-    { checkerGuid = "65b0de", zoneGuid = "1c5601" },
-    { checkerGuid = "2c0bbc", zoneGuid = "29b6cd" },
-}
-
 HERO_CLASSES = { }
 HERO_BAGS = {}
 CLASS_COMPONENTS = {}
-PLAYER_MENUS = {}
-
--- A checker is used to create the buttons for each player
-SELECTED_CLASS_BUTTON_INDEX = 2
-SELECTED_CHARACTER_BUTTON_INDEX = 5
+PLAYERS_PROPERTIES = {}
+TEXT_OBJECTS = {}
 
 CHARACTER_ZONE_GUID = "d88dbe"
-CHARACTER_MENU_START_INDEX = 4
-CLASS_DEFAULT_TEXT = "Pick a class"
+MENU_PREV_CLASS_BTN_IDX = 1
+MENU_NEXT_CLASS_BTN_IDX = 2
+MENU_PREV_CHAR_BTN_IDX = 3
+MENU_NEXT_CHAR_BTN_IDX = 4
 
+MENU_Z_SPACING = 5
+MENU_STARTING_Z_VALUE = 0
+MENU_NUMBER_OF_PLAYERS = 4
+CLASS_DEFAULT_TEXT = "Choose a class"
 
 function createCharacterSelectMenu ()
-    initializeCharacterBags()
     initializePlayerMenus()
-    initializeClassComponentsBags()
-    hidePlayerMenuCheckers()
 
-    for _, pm in pairs(PLAYER_MENUS) do
-        createMenuForPlayer(pm)
+    initializeCharacterBags()
+    initializeClassComponentsBags()
+end
+
+function spawnCycleClassButtonsObject(zPos)
+    local fixedZPos = zPos - 0.5
+
+    local previousClassButton = {
+        click_function = "cyclePreviousClass",
+        label = "<",
+        font_size = 500,
+        font_color = "Black",
+        width = 500,
+        height = 500
+    }
+
+    local nextClassButton = {
+        click_function = "cycleNextClass",
+        position = { x = 9, y = 2, z = 0 },
+        label = ">",
+        font_size = 500,
+        font_color = "Black",
+        width = 500,
+        height = 500
+    }
+
+    return spawnHiddenObjectWithButtons(3.5, fixedZPos, previousClassButton, nextClassButton)
+end
+
+function initializePlayerMenus() 
+    local zPos = MENU_STARTING_Z_VALUE
+
+    for i = 1, MENU_NUMBER_OF_PLAYERS, 1 do
+        spawnPlayerNumberText(i, zPos)
+        local selectedClassTextObj = spawnChooseClassText(zPos)
+        local cycleClassBtnsObj = spawnCycleClassButtonsObject(zPos)
+
+        zPos = zPos - MENU_Z_SPACING
+        PLAYERS_PROPERTIES[i] = createPlayerMenuProperties(i, selectedClassTextObj, cycleClassBtnsObj)
     end
+end
+
+function spawnChooseClassText(zPos)
+    local position = { x = 8, y = 1, z = zPos }
+    local text = CLASS_DEFAULT_TEXT
+
+    return spawn3DText(position, text)
+end
+
+function spawnPlayerNumberText(playerNumber, zPos)
+    local position = { x = 0, y = 1, z = zPos }
+    local text = "Player " .. playerNumber
+
+    return spawn3DText(position, text)
+end
+
+function createPlayerMenuProperties(playerNumber, selectedClassTextObj, btnsObj)
+    return {
+        number = playerNumber,
+        selectedClassTextObj = selectedClassTextObj,
+        buttonsObj = btnsObj,
+        selectedClassText = "",
+        selectedClassId = 0,
+        selectedCharacterText = "",
+        selectedCharacterId = 0,
+        selectedCharacterCard = nil,
+        selectedConsumable = nil,
+        selectedWeapon = nil,
+    }
 end
 
 function initializeCharacterBags()
@@ -50,92 +108,9 @@ function initializeClassComponentsBags()
     end
 end
 
-function initializePlayerMenus() 
-    for i = 1, #PLAYER_MENU_GUIDS, 1 do
-        local checkerGuid = PLAYER_MENU_GUIDS[i].checkerGuid
-        local zoneGuid = PLAYER_MENU_GUIDS[i].zoneGuid
-        PLAYER_MENUS[checkerGuid] = createPlayerMenuProperties(checkerGuid, i, zoneGuid)
-    end
-end
-
-function createPlayerMenuProperties(guid, number, cardZoneGuid)
-    return {
-        obj = getObjectFromGUID(guid),
-        number = number,
-        selectedClassText = "",
-        selectedClassId = 0,
-        selectedCharacterText = "",
-        selectedCharacterId = 0,
-        selectedCharacterCard = nil,
-        selectedCharacterFigurine = nil,
-        cardZoneGuid = cardZoneGuid,
-        selectedConsumable = nil,
-        selectedWeapon = nil
-    }
-end
-
--- Menus are created from a checker object that is hidden
-function hidePlayerMenuCheckers()
-    for _, pm in pairs(PLAYER_MENUS) do
-        local startZ = (pm.number - 1) * 5 * -1
-
-        pm.obj.setLock(true)
-        pm.obj.setPosition({ x = 0, y = 0, z = startZ })
-    end
-end
-
-function createMenuForPlayer(playerMenu)
-    local fontSize = 500
-
-    local playerText = {
-        click_function = "nil",
-        label = "Player " .. playerMenu.number,
-        position = { x = 0, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "White",
-        width = 0,
-        height = 0
-    }
-
-    local previousClassButton = {
-        click_function = "cyclePreviousClass",
-        label = "<",
-        position = { x = 3, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "Black",
-        width = 500,
-        height = 500
-    }
-
-    local selectedClassText = {
-        click_function = "nil",
-        label = CLASS_DEFAULT_TEXT,
-        position = { x = 6.5, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "White",
-        width = 0,
-        height = 0
-    }
-
-    local nextClassButton = {
-        click_function = "cycleNextClass",
-        label = ">",
-        position = { x = 10, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "Black",
-        width = 500,
-        height = 500
-    }
-
-    playerMenu.obj.createButton(playerText)
-    playerMenu.obj.createButton(previousClassButton)
-    playerMenu.obj.createButton(selectedClassText)
-    playerMenu.obj.createButton(nextClassButton)
-end
-
-function createCharacterMenu(playerMenu)
+function createCharacterMenu(playerProperties)
     -- Menu already exists
-    if characterMenuExists(playerMenu) then
+    if characterMenuExists(playerProperties) then
         return
     end
 
@@ -143,107 +118,104 @@ function createCharacterMenu(playerMenu)
     local previousCharacterButton = {
         click_function = "cyclePreviousCharacter",
         label = "<",
-        position = { x = 13, y = 1, z = 0 },
+        position = { x = 11, y = 2, z = 0 },
         font_size = fontSize,
         font_color = "Black",
         width = 500,
-        height = 500
-    }
-
-    local selectedCharacterText = {
-        click_function = "nil",
-        label = "",
-        position = { x = 16, y = 1, z = 0 },
-        font_size = fontSize,
-        font_color = "White",
-        width = 0,
-        height = 0
+        height = 1200
     }
 
     local nextCharacterButton = {
         click_function = "cycleNextCharacter",
         label = ">",
-        position = { x = 19, y = 1, z = 0 },
+        position = { x = 17, y = 2, z = 0 },
         font_size = fontSize,
         font_color = "Black",
         width = 500,
-        height = 500
+        height = 1200
     }
 
-    playerMenu.obj.createButton(previousCharacterButton)
-    playerMenu.obj.createButton(selectedCharacterText)
-    playerMenu.obj.createButton(nextCharacterButton)
+    playerProperties.buttonsObj.createButton(previousCharacterButton)
+    playerProperties.buttonsObj.createButton(nextCharacterButton)
 end
 
-function destroyCharacterMenu(playerMenu) 
-    if not characterMenuExists(playerMenu) then
+function destroyCharacterMenu(playerProperties) 
+    if not characterMenuExists(playerProperties) then
         return
     end
 
-    removeObjectsFromCharacterZone(playerMenu)
-    for i = CHARACTER_MENU_START_INDEX, #playerMenu.obj.getButtons() - 1, 1 do
-        playerMenu.obj.removeButton(i)
+    destroySelectedCharacterObjects(playerProperties)
+    for i = MENU_PREV_CHAR_BTN_IDX, #playerProperties.buttonsObj.getButtons() - 1, 1 do
+        playerProperties.buttonsObj.removeButton(i)
+    end
+end
+
+function getPlayerPropertiesFromButtonObj(btnObj)
+    for _, v in pairs(PLAYERS_PROPERTIES) do 
+        if (v.buttonsObj.getGUID() == btnObj.getGUID()) then 
+            return v
+        end
     end
 end
 
 function cyclePreviousClass(obj)
-    local playerMenu = PLAYER_MENUS[obj.getGUID()]
-    local previousClassId = playerMenu.selectedClassId - 1
+    local playerProperties = getPlayerPropertiesFromButtonObj(obj)
+    local previousClassId = playerProperties.selectedClassId - 1
 
     if previousClassId < 0 then 
         previousClassId = #HERO_CLASSES
     end
 
-    cycleClass(obj, playerMenu, previousClassId)
+    cycleClass(obj, playerProperties, previousClassId)
 end
 
 function cycleNextClass(obj)
-    local playerMenu = PLAYER_MENUS[obj.getGUID()]
-    local nextClassId = playerMenu.selectedClassId + 1
+    local playerProperties = getPlayerPropertiesFromButtonObj(obj)
+    local nextClassId = playerProperties.selectedClassId + 1
 
     if not HERO_CLASSES[nextClassId] then 
         nextClassId = 0 
     end
 
-    cycleClass(obj, playerMenu, nextClassId)
+    cycleClass(obj, playerProperties, nextClassId)
 end
 
-function cycleClass(obj, playerMenu, classId)
+function cycleClass(obj, playerProperties, classId)
     local selectedClass = HERO_CLASSES[classId] or CLASS_DEFAULT_TEXT
-    playerMenu.selectedClassText = HERO_CLASSES[classId]
-    playerMenu.selectedClassId = classId
-    playerMenu.obj.editButton({ index = SELECTED_CLASS_BUTTON_INDEX, label = selectedClass })
+    playerProperties.selectedClassText = HERO_CLASSES[classId]
+    playerProperties.selectedClassId = classId
+    playerProperties.selectedClassTextObj.TextTool.setValue(selectedClass)
 
     -- sets to 0 so next characterId is 1
-    playerMenu.selectedCharacterId = 0
+    playerProperties.selectedCharacterId = 0
     cycleNextCharacter(obj)
 end
 
 function cyclePreviousCharacter(obj)
-    local playerMenu = PLAYER_MENUS[obj.getGUID()]
-    local previousCharacterId = playerMenu.selectedCharacterId - 1
+    local playerProperties = getPlayerPropertiesFromButtonObj(obj)
+    local previousCharacterId = playerProperties.selectedCharacterId - 1
 
-    cycleCharacter(playerMenu, previousCharacterId, false)
+    cycleCharacter(playerProperties, previousCharacterId, false)
 end
 
 function cycleNextCharacter(obj)
-    local playerMenu = PLAYER_MENUS[obj.getGUID()]
-    local nextCharacterId = playerMenu.selectedCharacterId + 1
+    local playerProperties = getPlayerPropertiesFromButtonObj(obj)
+    local nextCharacterId = playerProperties.selectedCharacterId + 1
 
-    cycleCharacter(playerMenu, nextCharacterId, true)
+    cycleCharacter(playerProperties, nextCharacterId, true)
 end
 
-function cycleCharacter(playerMenu, characterId, isDefaultAtBeginning)
-    if (playerMenu.selectedClassId == 0) then 
-        destroyCharacterMenu(playerMenu)
+function cycleCharacter(playerProperties, characterId, isDefaultAtBeginning)
+    if (playerProperties.selectedClassId == 0) then 
+        destroyCharacterMenu(playerProperties)
         return
     end
 
-    createCharacterMenu(playerMenu)
+    createCharacterMenu(playerProperties)
 
-    local zPos = playerMenu.obj.getPosition().z
-    local bag = HERO_BAGS[playerMenu.selectedClassText]
-    local characters = HERO_BAGS[playerMenu.selectedClassText].getObjects()
+    local zPos = playerProperties.buttonsObj.getPosition().z
+    local bag = HERO_BAGS[playerProperties.selectedClassText]
+    local characters = HERO_BAGS[playerProperties.selectedClassText].getObjects()
     local characterBag = findCharacterBag(characters, characterId)
 
     if not characterBag then 
@@ -251,15 +223,14 @@ function cycleCharacter(playerMenu, characterId, isDefaultAtBeginning)
         characterBag = findCharacterBag(characters, characterId)
     end
 
-    playerMenu.selectedCharacterId = characterId
-    playerMenu.selectedCharacterText = characterBag.name
-    playerMenu.obj.editButton({ index = SELECTED_CHARACTER_BUTTON_INDEX, label = characterBag.name })
+    playerProperties.selectedCharacterId = characterId
+    playerProperties.selectedCharacterText = characterBag.name
 
-    placeObjectsOnCharacterZone(bag, playerMenu, zPos)
+    placeObjectsOnCharacterZone(bag, playerProperties, zPos)
 end
 
-function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
-    removeObjectsFromCharacterZone(playerMenu)
+function placeObjectsOnCharacterZone(bag, playerProperties, zPos)
+    destroySelectedCharacterObjects(playerProperties)
 
     local helperBag = bag.clone({ position = { x = 0, y = 1, z = 0 }})
     helperBag.interactable = false
@@ -267,13 +238,13 @@ function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
     helperBag.setPosition({ x = bag.getPosition().x, y = 1, z = 0 })
 
     local characterBag = helperBag.takeObject({ 
-        index = playerMenu.selectedCharacterId - 1, 
+        index = playerProperties.selectedCharacterId - 1, 
         position = { x = 23, y = -1, z = zPos },
         smooth = false
     })
 
     local characterCard = characterBag.takeObject({
-        position = { x = 23, y = 0.9, z = zPos },
+        position = { x = 17.5, y = 0.9, z = zPos },
         smooth = false
     })
 
@@ -281,33 +252,24 @@ function placeObjectsOnCharacterZone(bag, playerMenu, zPos)
     characterCard.setRotation({ x = 0, y = yRotation, z = 0 })
     characterCard.interactable = false
 
-    local figurine = characterBag.takeObject({
-        position = { x = 27, y = 0.9, z = zPos },
+    local characterFigurine = characterBag.takeObject({
+        position = { x = 17.5, y = 0.9, z = zPos },
         smooth = false
     })
-    figurine.interactable = false
+    characterFigurine.interactable = false
 
-    playerMenu.selectedCharacterCard = characterCard
-    playerMenu.selectedCharacterFigurine = figurine
+    playerProperties.selectedCharacterCard = characterCard
+    playerProperties.selectedCharacterFigurine = characterFigurine
 
     helperBag.destruct()
     characterBag.destruct()
 end
 
-function removeObjectsFromCharacterZone(playerMenu)
-    local objects = getObjectsFromCharacterZone(playerMenu)
-    for _, obj in pairs(objects) do 
-        obj.destruct()
+function destroySelectedCharacterObjects(playerProperties)
+    if playerProperties.selectedCharacterCard ~= nil then 
+        playerProperties.selectedCharacterCard.destruct()
+        playerProperties.selectedCharacterFigurine.destruct()
     end
-end
-
-function getObjectsFromCharacterZone(playerMenu)
-    local objectsInZone = getObjectFromGUID(playerMenu.cardZoneGuid).getObjects()
-    local objects = {}
-    for _, c in pairs(objectsInZone) do
-        table.insert(objects, c)
-    end
-    return objects;
 end
 
 function findCharacterBag(bag, characterId) 
@@ -318,16 +280,6 @@ function findCharacterBag(bag, characterId)
     end
 end
 
-function characterMenuExists(playerMenu)
-    return #playerMenu.obj.getButtons() > CHARACTER_MENU_START_INDEX
-end
-
-function destroyPlayerMenuButtons()
-    for _, v in pairs(PLAYER_MENUS) do
-        -- for _,b in pairs(v.obj.getButtons()) do
-            -- log(b.label)
-        -- end
-        -- log('--------------------------')
-        v.obj.destruct()
-    end
+function characterMenuExists(playerProperties)
+    return #playerProperties.buttonsObj.getButtons() > MENU_PREV_CHAR_BTN_IDX
 end
