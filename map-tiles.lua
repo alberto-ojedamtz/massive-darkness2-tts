@@ -28,12 +28,10 @@ MAP_TILE_OFFSET = 15.7
     z: Index from MAP_GRID_Z for position.z
     rotations: Number of times tile should be rotated to the right by 90°
 ]]
-function createTilePlacement(guid, x, z, yRotation)
-    local posX = MAP_GRID_X[x]
-    local posZ = MAP_GRID_Z[z]
+function createTilePlacement(guid, xPos, zPos, yRotation)
     local result = {
         guid = guid,
-        position = { x = posX, y = 2, z = posZ },
+        position = { x = xPos, y = 2, z = zPos },
         rotation = { x = 0, y = yRotation or 0, z = 0 }
     }
 
@@ -44,8 +42,8 @@ CORE_QUEST_1 = {
     name = "Tutorial",
     page = 36,
     tiles = { 
-        createTilePlacement(CORE_MAP_1A, 2, 4),
-        createTilePlacement(CORE_MAP_4A, 3, 4)
+        createTilePlacement(CORE_MAP_1A, -24.3, -18.1),
+        createTilePlacement(CORE_MAP_4A, -8.6, -18.1)
     },
 }
 
@@ -53,9 +51,9 @@ CORE_QUEST_2 = {
     name = "Highway to Hellscape",
     page = 37,
     tiles = {
-        createTilePlacement(CORE_MAP_1A, 2, 2, 270),
-        createTilePlacement(CORE_MAP_3A, 2, 3),
-        createTilePlacement(CORE_MAP_5A, 2, 4)
+        createTilePlacement(CORE_MAP_1A, -30.94, -18.1, 270),
+        createTilePlacement(CORE_MAP_3A, -15.24, -18.1),
+        createTilePlacement(CORE_MAP_5A, 0.46, -18.1)
     },
 }
 
