@@ -43,7 +43,7 @@ end
 CORE_QUEST_1 = {
     name = "Tutorial",
     page = 36,
-    tilesPlacement = { 
+    tiles = { 
         createTilePlacement(CORE_MAP_1A, 2, 4),
         createTilePlacement(CORE_MAP_4A, 3, 4)
     },
@@ -52,7 +52,7 @@ CORE_QUEST_1 = {
 CORE_QUEST_2 = {
     name = "Highway to Hellscape",
     page = 37,
-    tilesPlacement = {
+    tiles = {
         createTilePlacement(CORE_MAP_1A, 2, 2, 270),
         createTilePlacement(CORE_MAP_3A, 2, 3),
         createTilePlacement(CORE_MAP_5A, 2, 4)

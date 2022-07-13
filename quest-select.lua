@@ -103,18 +103,17 @@ function setUpQuest()
 end
 
 function placeMapTiles() 
-    if (TAKEN_MAP_TILE_INDEX > #QUEST_CATALOG[SELECTED_QUEST_INDEX].tilesPlacement) then
-        return
-    end
-
     local bag = getObjectFromGUID(MAP_TILES_BAG)
-    local tile = QUEST_CATALOG[SELECTED_QUEST_INDEX].tilesPlacement[TAKEN_MAP_TILE_INDEX]
-    TAKEN_MAP_TILE_INDEX = TAKEN_MAP_TILE_INDEX + 1
 
-    bag.takeObject({
-        guid = tile.guid,
-        position = tile.position,
-        rotation = tile.rotation,
-        callback_function = placeMapTiles
-    })
+    for k, tile in ipairs(QUEST_CATALOG[SELECTED_QUEST_INDEX].tiles) do
+        Wait.frames(
+            function() 
+                bag.takeObject({
+                    guid = tile.guid,
+                    position = tile.position,
+                    rotation = tile.rotation,
+                })
+            end
+            , k * 25)
+    end
 end
